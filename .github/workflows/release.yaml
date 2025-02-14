@@ -44,7 +44,7 @@ jobs:
       CGO_ENABLED: 0
       PROJECT_PATH: ${{ github.workspace }}
     steps:
-    - name: Display Go&&Make version
+    - name: Display GCC&&Make version
       run: |
         gcc --version
         make --version
@@ -54,6 +54,7 @@ jobs:
         BARCH: amd64
       run: |
         cd $PROJECT_PATH
+        ls
         make
         mv ciadpi ciadpi_amd64
         chmod +x ciadpi_amd64
@@ -73,7 +74,7 @@ jobs:
       CGO_ENABLED: 0
       PROJECT_PATH: ${{ github.workspace }}
     steps:
-    - name: Display Go&&Make version
+    - name: Display GCC&&Make version
       run: |
         gcc --version
         make --version
