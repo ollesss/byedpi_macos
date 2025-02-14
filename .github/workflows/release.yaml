@@ -53,9 +53,7 @@ jobs:
         BOS: darwin
         BARCH: amd64
       run: |
-        ls
-      run: |
-        cd $PROJECT_PATH
+        cd $PROJECT_PATH/byedpi_macos
         ls
         make
         mv ciadpi ciadpi_amd64
@@ -85,7 +83,7 @@ jobs:
         BOS: darwin
         BARCH: arm64
       run: |
-        cd $PROJECT_PATH
+        cd $PROJECT_PATH/byedpi_macos
         make
         mv ciadpi ciadpi_arm64
         chmod +x ciadpi_arm64
