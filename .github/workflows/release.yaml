@@ -53,6 +53,7 @@ jobs:
         BOS: darwin
         BARCH: amd64
       run: |
+        ls
         cd $PROJECT_PATH
         ls
         make
