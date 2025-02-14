@@ -57,9 +57,9 @@ jobs:
         cd $PROJECT_PATH
         ls
         make
-        mv ciadpi ciadpi_amd64
-        chmod +x ciadpi_amd64
-        tar -zcvf "byedpi-$BOS-$BARCH.tar.gz" ciadpi_amd64 && rm -r ciadpi_amd64
+        mv ciadpi ciadpi-x64
+        chmod +x ciadpi-x64
+        tar -zcvf "byedpi-$BOS-$BARCH.tar.gz" ciadpi-x64 && rm -r ciadpi-x64
         gh release upload $TAG_NAME "./byedpi-$BOS-$BARCH.tar.gz"
 
   build_arm64:
@@ -87,7 +87,7 @@ jobs:
       run: |
         cd $PROJECT_PATH
         make
-        mv ciadpi ciadpi_arm64
-        chmod +x ciadpi_arm64
-        tar -zcvf "byedpi-$BOS-$BARCH.tar.gz" ciadpi_arm64 && rm -r ciadpi_arm64
+        mv ciadpi ciadpi-arm
+        chmod +x ciadpi-arm
+        tar -zcvf "byedpi-$BOS-$BARCH.tar.gz" ciadpi-arm && rm -r ciadpi-arm
         gh release upload $TAG_NAME "./byedpi-$BOS-$BARCH.tar.gz"
