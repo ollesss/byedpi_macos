@@ -1,0 +1,86 @@
+name: Release drafter
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  draft_release:
+    runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version
+        id: read_version
+        run: |
+          echo "version=$(cat version/VERSION | tr -d '[:space:]')" >> $GITHUB_OUTPUT
+      - name: Print version
+        run: |
+          echo ${{ steps.read_version.outputs.version }}
+      - uses: release-drafter/release-drafter@v6
+        id: release
+        with:
+          version: ${{ steps.read_version.outputs.version }}
+          name: v${{ steps.read_version.outputs.version }}
+          tag: v${{ steps.read_version.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build_amd64:
+    runs-on: macos-14
+    needs: draft_release
+    name: Release amd64
+    permissions:
+      contents: write
+      pull-requests: write
+    env: 
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAG_NAME: ${{ needs.draft_release.outputs.tag_name }}
+      CGO_ENABLED: 0
+    steps:
+    - name: Display Go&&Make version
+      run: |
+        gcc --version
+        make --version
+    - name: darwin/amd64
+      env: 
+        BOS: darwin
+        BARCH: amd64
+      run: |
+        make
+        mv ciadpi ciadpi_amd64
+        chmod +x ciadpi_amd64
+        tar -zcvf "byedpi-$BOS-$BARCH.tar.gz" ciadpi_amd64 && rm -r ciadpi_amd64
+        gh release upload $TAG_NAME "./byedpi-$BOS-$BARCH.tar.gz"
+
+  build_arm64:
+    runs-on: macos-14-arm64
+    needs: draft_release
+    name: Release arm64
+    permissions:
+      contents: write
+      pull-requests: write
+    env: 
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAG_NAME: ${{ needs.draft_release.outputs.tag_name }}
+      CGO_ENABLED: 0
+    steps:
+    - name: Display Go&&Make version
+      run: |
+        gcc --version
+        make --version
+    - name: darwin/arm64
+      env: 
+        BOS: darwin
+        BARCH: arm64
+      run: |
+        make
+        mv ciadpi ciadpi_arm64
+        chmod +x ciadpi_arm64
+        tar -zcvf "byedpi-$BOS-$BARCH.tar.gz" ciadpi_arm64 && rm -r ciadpi_arm64
+        gh release upload $TAG_NAME "./byedpi-$BOS-$BARCH.tar.gz"
