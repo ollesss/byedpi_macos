@@ -54,6 +54,7 @@ jobs:
         BARCH: amd64
       run: |
         ls
+      run: |
         cd $PROJECT_PATH
         ls
         make
